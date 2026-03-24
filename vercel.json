@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://cohort2pod3.app.n8n.cloud/:path*"
+    }
+  ]
+}
