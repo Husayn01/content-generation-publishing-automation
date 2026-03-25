@@ -13,18 +13,22 @@ export default function App() {
   // ── Global state ──────────────────────────────────
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [drafts, setDrafts] = useState({ draft_a: '', draft_b: '', draft_c: '' });
+  const [drafts, setDrafts] = useState({ draft_1: '', draft_2: '', draft_3: '' });
   const [selectedDraftKey, setSelectedDraftKey] = useState('');
+  const [recordId, setRecordId] = useState('');
 
   const selectedDraftText = selectedDraftKey ? drafts[selectedDraftKey] : '';
 
   // ── Callbacks ─────────────────────────────────────
   const handleDraftsReceived = useCallback((data) => {
     setDrafts({
-      draft_a: data.draft_a,
-      draft_b: data.draft_b,
-      draft_c: data.draft_c,
+      draft_1: data.draft_1,
+      draft_2: data.draft_2,
+      draft_3: data.draft_3,
     });
+    if (data.record_id) {
+      setRecordId(data.record_id);
+    }
     setSelectedDraftKey('');
     setCurrentStep(2);
   }, []);
@@ -35,8 +39,9 @@ export default function App() {
 
   const handleReset = useCallback(() => {
     setCurrentStep(1);
-    setDrafts({ draft_a: '', draft_b: '', draft_c: '' });
+    setDrafts({ draft_1: '', draft_2: '', draft_3: '' });
     setSelectedDraftKey('');
+    setRecordId('');
     setIsLoading(false);
   }, []);
 
@@ -61,21 +66,19 @@ export default function App() {
             {/* Step pills */}
             <div className="hidden sm:flex items-center gap-2 text-xs font-medium">
               <span
-                className={`px-3 py-1 rounded-full transition-colors ${
-                  currentStep === 1
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-400'
-                }`}
+                className={`px-3 py-1 rounded-full transition-colors ${currentStep === 1
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-gray-100 text-gray-400'
+                  }`}
               >
                 1 · Submit
               </span>
               <span className="text-gray-300">→</span>
               <span
-                className={`px-3 py-1 rounded-full transition-colors ${
-                  currentStep === 2
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-400'
-                }`}
+                className={`px-3 py-1 rounded-full transition-colors ${currentStep === 2
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-gray-100 text-gray-400'
+                  }`}
               >
                 2 · Review &amp; Publish
               </span>
@@ -115,6 +118,7 @@ export default function App() {
               onSelectDraft={handleSelectDraft}
             />
             <PublishingControls
+              recordId={recordId}
               selectedDraftText={selectedDraftText}
               onReset={handleReset}
               isLoading={isLoading}

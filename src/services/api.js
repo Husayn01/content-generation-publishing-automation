@@ -2,7 +2,7 @@
 // These go through Vite's dev proxy (/api → cohort2pod3.app.n8n.cloud)
 // to avoid CORS issues. Update vite.config.js if the host changes.
 const WEBHOOK_GENERATE_DRAFTS = '/api/webhook-test/content-submission';
-const WEBHOOK_PUBLISH_DRAFT   = '/api/webhook-test/draft-selection';
+const WEBHOOK_PUBLISH_DRAFT = '/api/webhook-test/draft-selection';
 
 // ─── API Helpers ─────────────────────────────────────────────────
 
@@ -33,7 +33,7 @@ export async function generateDrafts(payload) {
 
 /**
  * POST to the publish / schedule webhook.
- * @param {{ selected_draft_text: string, action: 'publish_now'|'schedule', scheduled_time: string }} payload
+ * @param {{ submission_record_id: string, selected_draft_text: string, action: 'publish_now'|'schedule', scheduled_time: string }} payload
  * @returns {Promise<{ status: string }>}
  */
 export async function publishDraft(payload) {

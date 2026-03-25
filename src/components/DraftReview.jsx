@@ -1,9 +1,9 @@
 import { CheckCircle2 } from 'lucide-react';
 
 const DRAFT_LABELS = [
-  { key: 'draft_a', label: 'Draft A', color: 'from-blue-500 to-cyan-400' },
-  { key: 'draft_b', label: 'Draft B', color: 'from-violet-500 to-purple-400' },
-  { key: 'draft_c', label: 'Draft C', color: 'from-amber-500 to-orange-400' },
+  { key: 'draft_1', label: 'Draft 1', color: 'from-blue-500 to-cyan-400' },
+  { key: 'draft_2', label: 'Draft 2', color: 'from-violet-500 to-purple-400' },
+  { key: 'draft_3', label: 'Draft 3', color: 'from-amber-500 to-orange-400' },
 ];
 
 export default function DraftReview({ drafts, selectedDraftKey, onSelectDraft }) {
@@ -28,11 +28,10 @@ export default function DraftReview({ drafts, selectedDraftKey, onSelectDraft })
               key={key}
               type="button"
               onClick={() => onSelectDraft(key)}
-              className={`group relative text-left rounded-2xl border-2 transition-all duration-200 bg-white/80 backdrop-blur-md overflow-hidden cursor-pointer ${
-                isSelected
+              className={`group relative text-left rounded-2xl border-2 transition-all duration-200 bg-white/80 backdrop-blur-md overflow-hidden cursor-pointer ${isSelected
                   ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20 scale-[1.01]'
                   : 'border-gray-200/60 shadow-sm hover:shadow-md hover:border-gray-300'
-              }`}
+                }`}
             >
               {/* Colour bar */}
               <div className={`h-1.5 w-full bg-gradient-to-r ${color}`} />
@@ -43,11 +42,10 @@ export default function DraftReview({ drafts, selectedDraftKey, onSelectDraft })
                   {label}
                 </span>
                 <span
-                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 transition-colors ${
-                    isSelected
+                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 transition-colors ${isSelected
                       ? 'border-blue-500 bg-blue-500 text-white'
                       : 'border-gray-300 bg-white'
-                  }`}
+                    }`}
                 >
                   {isSelected && <CheckCircle2 size={14} />}
                 </span>

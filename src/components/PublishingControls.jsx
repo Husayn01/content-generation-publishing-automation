@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 export default function PublishingControls({
+  recordId,
   selectedDraftText,
   onReset,
   isLoading,
@@ -39,6 +40,7 @@ export default function PublishingControls({
 
     try {
       await publishDraft({
+        submission_record_id: recordId,
         selected_draft_text: selectedDraftText,
         action,
         scheduled_time: action === 'schedule' ? new Date(scheduledTime).toISOString() : '',
