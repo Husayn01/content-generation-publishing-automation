@@ -2,6 +2,7 @@
 // These go through Vite's dev proxy (/api → cohort2pod3.app.n8n.cloud)
 // to avoid CORS issues. Update vite.config.js if the host changes.
 const WEBHOOK_GENERATE_DRAFTS = '/api/webhook-test/content-submission';
+const WEBHOOK_REGENERATE_DRAFTS = '/api/webhook-test/regenerate-drafts';
 const WEBHOOK_PUBLISH_DRAFT = '/api/webhook-test/draft-selection';
 
 // ─── API Helpers ─────────────────────────────────────────────────
@@ -20,6 +21,31 @@ export async function generateDrafts(payload) {
 
   if (!res.ok) {
     throw new Error(`Draft generation failed (${res.status})`);
+  }
+
+  const data = await res.json();
+
+  if (data.status !== 'success') {
+    throw new Error(data.message || 'Unexpected response from server');
+  }
+
+  return data;
+}
+
+/**
+ * POST to the regenerate-drafts webhook.
+ * @param {{ submission_record_id: string, feedback: string }} payload
+ * @returns {Promise<{ status: string, draft_1: string, draft_2: string, draft_3: string, record_id: string }>}
+ */
+export async function regenerateDrafts(payload) {
+  const res = await fetch(WEBHOOK_REGENERATE_DRAFTS, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Regeneration failed (${res.status})`);
   }
 
   const data = await res.json();

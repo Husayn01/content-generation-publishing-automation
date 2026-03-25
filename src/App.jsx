@@ -7,6 +7,7 @@ import {
 
 import SubmissionForm from './components/SubmissionForm';
 import DraftReview from './components/DraftReview';
+import RegenerationForm from './components/RegenerationForm';
 import PublishingControls from './components/PublishingControls';
 
 export default function App() {
@@ -111,19 +112,27 @@ export default function App() {
         )}
 
         {currentStep === 2 && (
-          <div className="space-y-10">
+          <div className="space-y-6">
             <DraftReview
               drafts={drafts}
               selectedDraftKey={selectedDraftKey}
               onSelectDraft={handleSelectDraft}
             />
-            <PublishingControls
+            <RegenerationForm
               recordId={recordId}
-              selectedDraftText={selectedDraftText}
-              onReset={handleReset}
+              onRegenerated={handleDraftsReceived}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />
+            <div className="pt-4">
+              <PublishingControls
+                recordId={recordId}
+                selectedDraftText={selectedDraftText}
+                onReset={handleReset}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            </div>
           </div>
         )}
       </main>
