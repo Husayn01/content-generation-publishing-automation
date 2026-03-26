@@ -12,8 +12,12 @@ export default function Dashboard() {
   const navigate = useNavigate();
   // ── Global state ──────────────────────────────────
   const [currentStep, setCurrentStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [drafts, setDrafts] = useState({ draft_1: '', draft_2: '', draft_3: '' });
+
+  const isAnyLoading = isGenerating || isRegenerating || isPublishing;
   const [draftTags, setDraftTags] = useState({
     draft_1: 'Analytical',
     draft_2: 'Contrarian',
@@ -60,7 +64,9 @@ export default function Dashboard() {
     setDrafts({ draft_1: '', draft_2: '', draft_3: '' });
     setSelectedDraftKey('');
     setRecordId('');
-    setIsLoading(false);
+    setIsGenerating(false);
+    setIsRegenerating(false);
+    setIsPublishing(false);
   }, []);
 
   // ── Render ────────────────────────────────────────
@@ -136,8 +142,8 @@ export default function Dashboard() {
         {currentStep === 1 && (
           <SubmissionForm
             onDraftsReceived={handleDraftsReceived}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
+            isLoading={isGenerating}
+            setIsLoading={setIsGenerating}
           />
         )}
 
@@ -152,16 +158,18 @@ export default function Dashboard() {
             <RegenerationForm
               recordId={recordId}
               onRegenerated={handleDraftsReceived}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              isLoading={isRegenerating}
+              setIsLoading={setIsRegenerating}
+              isAnyLoading={isAnyLoading}
             />
             <div className="pt-4">
               <PublishingControls
                 recordId={recordId}
                 selectedDraftText={selectedDraftText}
                 onReset={handleReset}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
+                isLoading={isPublishing}
+                setIsLoading={setIsPublishing}
+                isAnyLoading={isAnyLoading}
               />
             </div>
           </div>

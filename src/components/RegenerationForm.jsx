@@ -3,7 +3,7 @@ import { regenerateDrafts } from '../services/api';
 import { RefreshCw, MessageSquare } from 'lucide-react';
 import AILoadingProgress from './AILoadingProgress';
 
-export default function RegenerationForm({ recordId, onRegenerated, isLoading, setIsLoading }) {
+export default function RegenerationForm({ recordId, onRegenerated, isLoading, setIsLoading, isAnyLoading }) {
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
 
@@ -45,7 +45,7 @@ export default function RegenerationForm({ recordId, onRegenerated, isLoading, s
                 type="text"
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                disabled={isLoading}
+                disabled={isAnyLoading}
                 placeholder="Not quite right? Request changes to get a fresh set of drafts..."
                 className="w-full rounded-xl border border-orange-100 bg-orange-50/50 pl-11 pr-4 py-3.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-400 transition-all disabled:opacity-50"
               />
@@ -65,7 +65,7 @@ export default function RegenerationForm({ recordId, onRegenerated, isLoading, s
             ) : (
               <button
                 type="submit"
-                disabled={!feedback.trim()}
+                disabled={isAnyLoading || !feedback.trim()}
                 className="shrink-0 w-full md:w-auto flex items-center justify-center gap-2 bg-white text-orange-600 border-2 border-orange-500 hover:bg-orange-50 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <RefreshCw size={18} />

@@ -15,13 +15,14 @@ export default function PublishingControls({
   onReset,
   isLoading,
   setIsLoading,
+  isAnyLoading,
 }) {
   const [action, setAction] = useState('publish_now');
   const [scheduledTime, setScheduledTime] = useState('');
   const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
 
-  const canSubmit = selectedDraftText && !isLoading;
+  const canSubmit = selectedDraftText && !isAnyLoading;
 
   const handleSubmit = async () => {
     setError('');
