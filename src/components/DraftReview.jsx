@@ -6,7 +6,7 @@ const DRAFT_LABELS = [
   { key: 'draft_3', label: 'Draft 3', color: 'from-amber-500 to-orange-400' },
 ];
 
-export default function DraftReview({ drafts, selectedDraftKey, onSelectDraft }) {
+export default function DraftReview({ drafts, draftTags, selectedDraftKey, onSelectDraft }) {
   return (
     <div className="animate-fade-in-up w-full max-w-6xl mx-auto">
       {/* Section heading */}
@@ -38,9 +38,16 @@ export default function DraftReview({ drafts, selectedDraftKey, onSelectDraft })
 
               {/* Header */}
               <div className="flex items-center justify-between px-5 pt-4 pb-2">
-                <span className="text-sm font-bold text-gray-700 tracking-wide uppercase">
-                  {label}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-700 tracking-wide uppercase">
+                    {label}
+                  </span>
+                  {draftTags && draftTags[key] && (
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
+                      {draftTags[key]}
+                    </span>
+                  )}
+                </div>
                 <span
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 transition-colors ${isSelected
                       ? 'border-blue-500 bg-blue-500 text-white'

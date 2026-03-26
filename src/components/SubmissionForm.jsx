@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { generateDrafts } from '../services/api';
+import AILoadingProgress from './AILoadingProgress';
 import {
   Loader2,
   Send,
@@ -15,12 +16,21 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
   const [contentInput, setContentInput] = useState('');
   const [error, setError] = useState('');
 
+  const MAX_WORDS = 600;
+  const wordCount = contentInput.trim() ? contentInput.trim().split(/\s+/).length : 0;
+  const isOverLimit = submissionType === 'text' && wordCount > MAX_WORDS;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (!contentInput.trim()) {
       setError('Please enter your content before generating drafts.');
+      return;
+    }
+
+    if (isOverLimit) {
+      setError(`Your idea exceeds the ${MAX_WORDS}-word limit. Please shorten it before generating.`);
       return;
     }
 
@@ -103,15 +113,25 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
             </label>
 
             {submissionType === 'text' ? (
-              <textarea
-                id="content-input"
-                rows={6}
-                placeholder="Describe your content idea, topic, or key talking points…"
-                value={contentInput}
-                onChange={(e) => setContentInput(e.target.value)}
-                disabled={isLoading}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-              />
+              <div className="space-y-2">
+                <textarea
+                  id="content-input"
+                  rows={6}
+                  placeholder="Describe your content idea, topic, or key talking points…"
+                  value={contentInput}
+                  onChange={(e) => setContentInput(e.target.value)}
+                  disabled={isLoading}
+                  className={`w-full rounded-xl border bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isOverLimit ? 'border-red-300 focus:border-red-400 focus:ring-red-500/40' : 'border-gray-200 focus:border-indigo-400 focus:ring-indigo-500/40'
+                  }`}
+                />
+                <div className="flex justify-between items-center px-1">
+                  <span className={`text-xs font-semibold transition-colors ${isOverLimit ? 'text-red-500' : 'text-slate-400'}`}>
+                    {wordCount} / {MAX_WORDS} words
+                  </span>
+                  {isOverLimit && <span className="text-xs text-red-500 font-medium tracking-tight animate-pulse">Maximum limit exceeded</span>}
+                </div>
+              </div>
             ) : (
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -138,24 +158,19 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
             </div>
           )}
 
-          {/* ── Submit button ────────────────────────── */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-md cursor-pointer"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 size={20} className="animate-spin" />
-                Generating Drafts…
-              </>
-            ) : (
-              <>
-                <Send size={18} />
-                Generate Drafts
-              </>
-            )}
-          </button>
+          {/* ── Submit button / Loading State ────────────────────────── */}
+          {isLoading ? (
+            <AILoadingProgress />
+          ) : (
+            <button
+              type="submit"
+              disabled={isOverLimit}
+              className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer"
+            >
+              <Send size={18} />
+              Generate Drafts
+            </button>
+          )}
         </form>
       </div>
     </div>

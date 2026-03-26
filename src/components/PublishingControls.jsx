@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { publishDraft } from '../services/api';
+import AILoadingProgress from './AILoadingProgress';
 import {
-  Loader2,
   Rocket,
   CalendarClock,
   Zap,
@@ -165,24 +165,28 @@ export default function PublishingControls({
             )}
 
             {/* ── Submit button ──────────────────────── */}
-            <button
-              type="button"
-              disabled={!canSubmit}
-              onClick={handleSubmit}
-              className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md cursor-pointer"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 size={20} className="animate-spin" />
-                  Processing…
-                </>
-              ) : (
-                <>
-                  <Rocket size={18} />
-                  Approve &amp; Process
-                </>
-              )}
-            </button>
+            {isLoading ? (
+              <AILoadingProgress 
+                theme="emerald"
+                intervalTime={6000}
+                messages={[
+                  "Adapting content for platforms...",
+                  "Generating cover image...",
+                  "Connecting to social APIs...",
+                  "Finalizing post..."
+                ]}
+              />
+            ) : (
+              <button
+                type="button"
+                disabled={!canSubmit}
+                onClick={handleSubmit}
+                className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md cursor-pointer"
+              >
+                <Rocket size={18} />
+                Approve &amp; Process
+              </button>
+            )}
 
             {!selectedDraftText && (
               <p className="text-center text-xs text-gray-400">

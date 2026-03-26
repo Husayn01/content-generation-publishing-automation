@@ -23,10 +23,14 @@ export async function generateDrafts(payload) {
     throw new Error(`Draft generation failed (${res.status})`);
   }
 
-  const data = await res.json();
+  let data = await res.json();
 
-  if (data.status !== 'success') {
-    throw new Error(data.message || 'Unexpected response from server');
+  if (Array.isArray(data)) {
+    data = data[0];
+  }
+
+  if (data.status === 'error' || data.error) {
+    throw new Error(data.message || data.error || 'Unexpected response from server');
   }
 
   return data;
@@ -48,10 +52,14 @@ export async function regenerateDrafts(payload) {
     throw new Error(`Regeneration failed (${res.status})`);
   }
 
-  const data = await res.json();
+  let data = await res.json();
 
-  if (data.status !== 'success') {
-    throw new Error(data.message || 'Unexpected response from server');
+  if (Array.isArray(data)) {
+    data = data[0];
+  }
+
+  if (data.status === 'error' || data.error) {
+    throw new Error(data.message || data.error || 'Unexpected response from server');
   }
 
   return data;
@@ -73,5 +81,15 @@ export async function publishDraft(payload) {
     throw new Error(`Publishing failed (${res.status})`);
   }
 
-  return res.json();
+  let data = await res.json();
+  
+  if (Array.isArray(data)) {
+    data = data[0];
+  }
+
+  if (data.status === 'error' || data.error) {
+    throw new Error(data.message || data.error || 'Publishing failed');
+  }
+
+  return data;
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { regenerateDrafts } from '../services/api';
-import { Loader2, RefreshCw, MessageSquare } from 'lucide-react';
+import { RefreshCw, MessageSquare } from 'lucide-react';
+import AILoadingProgress from './AILoadingProgress';
 
 export default function RegenerationForm({ recordId, onRegenerated, isLoading, setIsLoading }) {
   const [feedback, setFeedback] = useState('');
@@ -50,23 +51,27 @@ export default function RegenerationForm({ recordId, onRegenerated, isLoading, s
               />
             </div>
             
-            <button
-              type="submit"
-              disabled={isLoading || !feedback.trim()}
-              className="shrink-0 w-full md:w-auto flex items-center justify-center gap-2 bg-white text-orange-600 border-2 border-orange-500 hover:bg-orange-50 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Regenerating...
-                </>
-              ) : (
-                <>
-                  <RefreshCw size={18} />
-                  Regenerate
-                </>
-              )}
-            </button>
+            {isLoading ? (
+              <div className="shrink-0 w-full md:w-auto min-w-[300px]">
+                <AILoadingProgress 
+                  messages={[
+                    "Analyzing feedback...",
+                    "Tuning parameter weights...",
+                    "Rewriting multi-angle drafts...",
+                    "Polishing Fetemi style..."
+                  ]} 
+                />
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={!feedback.trim()}
+                className="shrink-0 w-full md:w-auto flex items-center justify-center gap-2 bg-white text-orange-600 border-2 border-orange-500 hover:bg-orange-50 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <RefreshCw size={18} />
+                Regenerate
+              </button>
+            )}
           </div>
           {error && (
             <div className="mt-4 flex items-start gap-2 text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 border border-red-100">
