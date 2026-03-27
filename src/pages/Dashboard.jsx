@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Layers, ArrowLeft, RotateCcw, LogOut } from 'lucide-react';
+import { Layers, ArrowLeft, RotateCcw, LogOut, Database, ExternalLink, LayoutDashboard } from 'lucide-react';
 
 import SubmissionForm from '../components/SubmissionForm';
 import DraftReview from '../components/DraftReview';
@@ -137,9 +137,63 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* ═══ Main content ═════════════════════════════ */}
-      <main className="flex-1 py-10 px-4 sm:px-6">
-        {currentStep === 1 && (
+      {/* ═══ Layout Wrapper ═══════════════════════════ */}
+      <div className="flex flex-1 w-full max-w-7xl mx-auto">
+        
+        {/* ═══ Sidebar ══════════════════════════════════ */}
+        <aside className="w-[280px] shrink-0 hidden lg:flex flex-col py-10 pr-8">
+          <div className="bg-white/80 backdrop-blur-md border border-slate-200/60 shadow-sm rounded-2xl p-5 relative overflow-hidden">
+            {/* Soft decorative glow */}
+            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+            
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/50"></span>
+              Workspace Links
+            </h3>
+            
+            <nav className="flex flex-col gap-3 relative z-10">
+              <a 
+                href="https://airtable.com/appiQz7Mzyw4LykjY/shrT3PfO669E3zP2U" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-indigo-100 bg-transparent hover:bg-indigo-50/50 hover:shadow-sm transition-all group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-indigo-100/70 flex items-center justify-center shrink-0 transition-colors">
+                  <Database size={18} className="text-slate-500 group-hover:text-indigo-600 transition-colors" />
+                </div>
+                <div className="flex-1 flex flex-col pt-0.5">
+                  <span className="text-sm font-bold text-slate-700 group-hover:text-indigo-700 transition-colors flex items-center justify-between">
+                    Airtable SDK
+                    <ExternalLink size={14} className="opacity-0 group-hover:opacity-60 transition-opacity" />
+                  </span>
+                  <span className="text-xs font-semibold text-slate-400 mt-0.5">Raw data pipeline</span>
+                </div>
+              </a>
+
+              <a 
+                href="https://airtable.com/appiQz7Mzyw4LykjY/shreTH69XA2THxPi7" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-indigo-100 bg-transparent hover:bg-indigo-50/50 hover:shadow-sm transition-all group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-indigo-100/70 flex items-center justify-center shrink-0 transition-colors">
+                  <LayoutDashboard size={18} className="text-slate-500 group-hover:text-indigo-600 transition-colors" />
+                </div>
+                <div className="flex-1 flex flex-col pt-0.5">
+                  <span className="text-sm font-bold text-slate-700 group-hover:text-indigo-700 transition-colors flex items-center justify-between">
+                    Exec Interface
+                    <ExternalLink size={14} className="opacity-0 group-hover:opacity-60 transition-opacity" />
+                  </span>
+                  <span className="text-xs font-semibold text-slate-400 mt-0.5">Live Analytics</span>
+                </div>
+              </a>
+            </nav>
+          </div>
+        </aside>
+
+        {/* ═══ Main content ═════════════════════════════ */}
+        <main className="flex-1 py-10 px-4 sm:px-6">
+          {currentStep === 1 && (
           <SubmissionForm
             onDraftsReceived={handleDraftsReceived}
             isLoading={isGenerating}
@@ -174,7 +228,8 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-      </main>
+        </main>
+      </div>
 
       {/* ═══ Footer ═══════════════════════════════════ */}
       <footer className="text-center py-6 text-xs text-slate-400 border-t border-slate-200/40">

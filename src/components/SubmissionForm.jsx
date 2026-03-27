@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { generateDrafts } from '../services/api';
 import AILoadingProgress from './AILoadingProgress';
+import DuplicateWarningModal from './DuplicateWarningModal';
 import {
   Loader2,
   Send,
@@ -15,13 +16,14 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
   const [submissionType, setSubmissionType] = useState('text');
   const [contentInput, setContentInput] = useState('');
   const [error, setError] = useState('');
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
 
   const MAX_WORDS = 600;
   const wordCount = contentInput.trim() ? contentInput.trim().split(/\s+/).length : 0;
   const isOverLimit = submissionType === 'text' && wordCount > MAX_WORDS;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, overrideForce = false) => {
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
 
     if (!contentInput.trim()) {
@@ -40,8 +42,14 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
       const data = await generateDrafts({
         submission_type: submissionType,
         content_input: contentInput.trim(),
+        ...(overrideForce && { force_process: true })
       });
-      onDraftsReceived(data);
+      
+      if (data.status === 'duplicate_warning') {
+        setShowDuplicateModal(true);
+      } else {
+        onDraftsReceived(data);
+      }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
@@ -49,9 +57,21 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
     }
   };
 
+  const handleForceProceed = () => {
+    setShowDuplicateModal(false);
+    handleSubmit(null, true);
+  };
+
   return (
-    <div className="animate-fade-in-up w-full max-w-2xl mx-auto">
-      {/* ── Card ────────────────────────────────────────── */}
+    <div>
+      <DuplicateWarningModal 
+        isOpen={showDuplicateModal} 
+        onClose={() => setShowDuplicateModal(false)}
+        onProceed={handleForceProceed} 
+      />
+
+      <div className="animate-fade-in-up w-full max-w-2xl mx-auto">
+        {/* ── Card ────────────────────────────────────────── */}
       <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-gray-200/60 overflow-hidden">
         {/* Card header */}
         <div className="px-8 pt-8 pb-4">
@@ -173,6 +193,7 @@ export default function SubmissionForm({ onDraftsReceived, isLoading, setIsLoadi
           )}
         </form>
       </div>
+    </div>
     </div>
   );
 }

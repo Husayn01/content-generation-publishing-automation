@@ -1,9 +1,9 @@
 // ─── n8n Webhook URLs ────────────────────────────────────────────
 // These go through Vite's dev proxy (/api → cohort2pod3.app.n8n.cloud)
 // to avoid CORS issues. Update vite.config.js if the host changes.
-const WEBHOOK_GENERATE_DRAFTS = '/api/webhook-test/content-submission';
-const WEBHOOK_REGENERATE_DRAFTS = '/api/webhook-test/regenerate-drafts';
-const WEBHOOK_PUBLISH_DRAFT = '/api/webhook-test/draft-selection';
+const WEBHOOK_GENERATE_DRAFTS = '/api/webhook/content-submission';
+const WEBHOOK_REGENERATE_DRAFTS = '/api/webhook/regenerate-drafts';
+const WEBHOOK_PUBLISH_DRAFT = '/api/webhook/draft-selection';
 
 // ─── API Helpers ─────────────────────────────────────────────────
 
@@ -82,7 +82,7 @@ export async function publishDraft(payload) {
   }
 
   let data = await res.json();
-  
+
   if (Array.isArray(data)) {
     data = data[0];
   }
